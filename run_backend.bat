@@ -1,0 +1,3 @@
+@echo off
+echo Starting SecureSense Backend API...
+python -m uvicorn backend.main:app --reload
