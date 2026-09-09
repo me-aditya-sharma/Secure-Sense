@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureSense — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+
+<header class="navbar">
+  <div class="container navbar__inner">
+    <div class="navbar__brand">
+      <div class="navbar__badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/>
+          <path d="M9 12.5l2 2 4-4.5"/>
+        </svg>
+      </div>
+      <span class="navbar__brand-text">SecureSense</span>
+    </div>
+    <div class="navbar__user">
+      <span class="navbar__user-name" data-navbar-name>&nbsp;</span>
+      <div class="navbar__avatar" data-navbar-avatar>&nbsp;</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <nav class="nav-pill-row" data-pill-group aria-label="Sections">
+      <button type="button" class="nav-pill active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </button>
+      <a href="call-check.html" class="nav-pill" style="text-decoration:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 0 1 2-2h2.28a1 1 0 0 1 .99.86l.63 4.4a1 1 0 0 1-.55 1.03l-1.7.86a12 12 0 0 0 6.2 6.2l.86-1.7a1 1 0 0 1 1.03-.55l4.4.63a1 1 0 0 1 .86.99V19a2 2 0 0 1-2 2h-1C9.6 21 3 14.4 3 6V5Z"/></svg>
+        Call Check
+      </a>
+      <a href="dashboard.html#history" class="nav-pill" style="text-decoration:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 3"/></svg>
+        History
+      </a>
+      <button type="button" class="nav-pill" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
+        Alerts
+      </button>
+    </nav>
+
+    <div class="page-heading">
+      <h1>Welcome back, <span data-navbar-firstname>there</span></h1>
+      <p>Here's what SecureSense has flagged across recent calls.</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-row__item">
+        <div class="stat-row__value">128</div>
+        <div class="stat-row__label">Calls analyzed today</div>
+      </div>
+      <div class="stat-row__item">
+        <div class="stat-row__value">9</div>
+        <div class="stat-row__label">Flagged for review</div>
+      </div>
+      <div class="stat-row__item">
+        <div class="stat-row__value">112</div>
+        <div class="stat-row__label">Voice matches confirmed</div>
+      </div>
+    </div>
+
+    <a href="call-check.html" class="cta-panel" style="text-decoration:none; color:inherit; margin-bottom: 32px;">
+      <div class="cta-panel__top">
+        <div class="cta-panel__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 0 1 2-2h2.28a1 1 0 0 1 .99.86l.63 4.4a1 1 0 0 1-.55 1.03l-1.7.86a12 12 0 0 0 6.2 6.2l.86-1.7a1 1 0 0 1 1.03-.55l4.4.63a1 1 0 0 1 .86.99V19a2 2 0 0 1-2 2h-1C9.6 21 3 14.4 3 6V5Z"/></svg>
+        </div>
+        <div>
+          <h3>Run a Call Check</h3>
+          <p>Upload a recording and screen it for voice, behaviour and conversation risk</p>
+          <div class="tag-row">
+            <span class="tag">Voice auth</span>
+            <span class="tag">Behaviour</span>
+            <span class="tag">Conversation</span>
+            <span class="tag">Call trust</span>
+          </div>
+        </div>
+      </div>
+      <div class="cta-panel__bottom">
+        <span style="font-size:12.5px; color:var(--color-text-muted);">4 checks, run in sequence</span>
+        <span class="cta-panel__cta">
+          Start check
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <div id="history" class="section-head">
+      <div class="icon-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 3"/></svg>
+      </div>
+      <div>
+        <h2>Recent call checks</h2>
+        <p>Latest calls screened by the team</p>
+      </div>
+    </div>
+
+    <div class="list-card">
+      <div class="status-dot-item">
+        <span class="status-dot status-dot--high"></span>
+        <div class="status-dot-item__body">
+          <div class="status-dot-item__title">Loan verification</div>
+          <div class="status-dot-item__phone">+91 90XXX XXX14</div>
+          <div class="status-dot-item__meta">Voice mismatch detected, high urgency language</div>
+        </div>
+        <span class="status-dot-item__time">4 min ago</span>
+      </div>
+      <div class="status-dot-item">
+        <span class="status-dot status-dot--medium"></span>
+        <div class="status-dot-item__body">
+          <div class="status-dot-item__title">Card reissue</div>
+          <div class="status-dot-item__phone">+91 88XXX XXX52</div>
+          <div class="status-dot-item__meta">Background noise inconsistent with claimed location</div>
+        </div>
+        <span class="status-dot-item__time">22 min ago</span>
+      </div>
+      <div class="status-dot-item">
+        <span class="status-dot status-dot--low"></span>
+        <div class="status-dot-item__body">
+          <div class="status-dot-item__title">Account update</div>
+          <div class="status-dot-item__phone">+91 96XXX XXX87</div>
+          <div class="status-dot-item__meta">Voiceprint matched, conversation pattern normal</div>
+        </div>
+        <span class="status-dot-item__time">1 hr ago</span>
+      </div>
+      <div class="status-dot-item">
+        <span class="status-dot status-dot--low"></span>
+        <div class="status-dot-item__body">
+          <div class="status-dot-item__title">Balance enquiry</div>
+          <div class="status-dot-item__phone">+91 91XXX XXX33</div>
+          <div class="status-dot-item__meta">Voiceprint matched, low risk overall</div>
+        </div>
+        <span class="status-dot-item__time">3 hr ago</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureSense — Call Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+
+<header class="navbar">
+  <div class="container navbar__inner">
+    <a href="dashboard.html" class="navbar__brand" style="text-decoration:none; color:inherit;">
+      <div class="navbar__badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/>
+          <path d="M9 12.5l2 2 4-4.5"/>
+        </svg>
+      </div>
+      <span class="navbar__brand-text">SecureSense</span>
+    </a>
+    <div class="navbar__user">
+      <span class="navbar__user-name" data-navbar-name>&nbsp;</span>
+      <div class="navbar__avatar" data-navbar-avatar>&nbsp;</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <nav class="nav-pill-row" data-pill-group aria-label="Sections">
+      <a href="dashboard.html" class="nav-pill" style="text-decoration:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </a>
+      <button type="button" class="nav-pill active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 0 1 2-2h2.28a1 1 0 0 1 .99.86l.63 4.4a1 1 0 0 1-.55 1.03l-1.7.86a12 12 0 0 0 6.2 6.2l.86-1.7a1 1 0 0 1 1.03-.55l4.4.63a1 1 0 0 1 .86.99V19a2 2 0 0 1-2 2h-1C9.6 21 3 14.4 3 6V5Z"/></svg>
+        Call Check
+      </button>
+      <a href="dashboard.html#history" class="nav-pill" style="text-decoration:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 3"/></svg>
+        History
+      </a>
+      <button type="button" class="nav-pill" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
+        Alerts
+      </button>
+    </nav>
+
+    <div class="page-heading">
+      <h1>Call Check</h1>
+      <p>Upload a call recording to screen it for voice, behaviour, and conversation risk.</p>
+    </div>
+
+    <div class="stack">
+
+      <div class="card">
+        <div class="section-head">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v10.5a3.5 3.5 0 1 1-2-3.16"/><path d="M9 3h6"/></svg>
+          </div>
+          <div>
+            <h2>Upload recording</h2>
+            <p>Accepts WAV, MP3, or M4A, up to 25 MB</p>
+          </div>
+        </div>
+
+        <div class="upload-zone" data-upload-zone tabindex="0" role="button" aria-label="Upload audio file">
+          <div class="upload-zone__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M12 4 7 9M12 4l5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+          </div>
+          <div class="upload-zone__title">Tap to upload an audio file</div>
+          <div class="upload-zone__hint">Drag and drop, or <strong>browse files</strong></div>
+          <input type="file" accept="audio/*" data-upload-input aria-hidden="true">
+        </div>
+
+        <div class="file-chip hidden" data-file-chip>
+          <div class="file-chip__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </div>
+          <div class="file-chip__body">
+            <div class="file-chip__name" data-file-name>recording.mp3</div>
+            <div class="file-chip__meta" data-file-meta>2.4 MB</div>
+          </div>
+          <button type="button" class="file-chip__remove" data-file-remove aria-label="Remove file">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <button type="button" class="btn-primary btn-block mt-3" data-analyze-btn disabled>
+          <span data-analyze-label>Analyze recording</span>
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="section-head">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <div>
+            <h2>Analysis stages</h2>
+            <p>SecureSense screens the call through four checks, in sequence</p>
+          </div>
+        </div>
+
+        <div class="stage-list">
+
+          <div class="stage-item" data-stage>
+            <div class="stage-item__marker">1</div>
+            <div class="stage-item__body">
+              <div class="stage-item__title">Voice Authentication</div>
+              <div class="stage-item__desc">Matches the caller's voiceprint against the enrolled sample</div>
+            </div>
+            <span class="stage-item__status" data-stage-status>Waiting</span>
+          </div>
+
+          <div class="stage-item" data-stage>
+            <div class="stage-item__marker">2</div>
+            <div class="stage-item__body">
+              <div class="stage-item__title">Behaviour</div>
+              <div class="stage-item__desc">Reviews pacing, hesitation, and call-handling patterns</div>
+            </div>
+            <span class="stage-item__status" data-stage-status>Waiting</span>
+          </div>
+
+          <div class="stage-item" data-stage>
+            <div class="stage-item__marker">3</div>
+            <div class="stage-item__body">
+              <div class="stage-item__title">Conversation</div>
+              <div class="stage-item__desc">Scans transcript content for social-engineering cues</div>
+            </div>
+            <span class="stage-item__status" data-stage-status>Waiting</span>
+          </div>
+
+          <div class="stage-item" data-stage>
+            <div class="stage-item__marker">4</div>
+            <div class="stage-item__body">
+              <div class="stage-item__title">Call Trust</div>
+              <div class="stage-item__desc">Combines all signals into a single trust decision</div>
+            </div>
+            <span class="stage-item__status" data-stage-status>Waiting</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="hidden" data-result-panel>
+        <div class="stack">
+
+          <div class="decision-panel decision-panel--high">
+            <div class="decision-panel__score">31<span>Trust score / 100</span></div>
+            <div class="decision-panel__body">
+              <div class="decision-panel__action">Pause call — verify separately</div>
+              <div class="decision-panel__desc">End the call and confirm the caller's identity through a separate, trusted channel before taking any action.</div>
+            </div>
+            <div class="decision-panel__badge-wrap">
+              <span class="risk-badge risk-badge--high">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+                High risk
+              </span>
+            </div>
+          </div>
+
+          <div class="signal-card">
+            <div class="signal-card__head">
+              <span class="signal-card__name">Voice Authentication</span>
+              <span class="risk-badge risk-badge--low">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+                Low risk
+              </span>
+            </div>
+            <div class="signal-card__scores">
+              <div class="signal-card__score">91 <span>/ 100</span></div>
+              <div class="signal-card__confidence">96% confidence</div>
+            </div>
+            <div class="signal-card__bar-track">
+              <div class="signal-card__bar-fill signal-card__bar-fill--low" style="width: 91%;"></div>
+            </div>
+            <div class="evidence-tags">
+              <span class="evidence-tag">Voiceprint matched</span>
+              <span class="evidence-tag">Stable pitch profile</span>
+              <span class="evidence-tag">No synthesis artifacts</span>
+            </div>
+          </div>
+
+          <div class="signal-card">
+            <div class="signal-card__head">
+              <span class="signal-card__name">Behaviour</span>
+              <span class="risk-badge risk-badge--medium">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+                Medium risk
+              </span>
+            </div>
+            <div class="signal-card__scores">
+              <div class="signal-card__score">54 <span>/ 100</span></div>
+              <div class="signal-card__confidence">84% confidence</div>
+            </div>
+            <div class="signal-card__bar-track">
+              <div class="signal-card__bar-fill signal-card__bar-fill--medium" style="width: 54%;"></div>
+            </div>
+            <div class="evidence-tags">
+              <span class="evidence-tag">Unusual pacing</span>
+              <span class="evidence-tag">Repeated hesitation</span>
+              <span class="evidence-tag">Scripted phrasing</span>
+            </div>
+          </div>
+
+          <div class="signal-card">
+            <div class="signal-card__head">
+              <span class="signal-card__name">Conversation</span>
+              <span class="risk-badge risk-badge--high">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+                High risk
+              </span>
+            </div>
+            <div class="signal-card__scores">
+              <div class="signal-card__score">22 <span>/ 100</span></div>
+              <div class="signal-card__confidence">91% confidence</div>
+            </div>
+            <div class="signal-card__bar-track">
+              <div class="signal-card__bar-fill signal-card__bar-fill--high" style="width: 22%;"></div>
+            </div>
+            <div class="evidence-tags">
+              <span class="evidence-tag">Urgency language</span>
+              <span class="evidence-tag">Requests OTP</span>
+              <span class="evidence-tag">Pressure tactics</span>
+            </div>
+          </div>
+
+          <div class="signal-card">
+            <div class="signal-card__head">
+              <span class="signal-card__name">Call Trust</span>
+              <span class="risk-badge risk-badge--high">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+                High risk
+              </span>
+            </div>
+            <div class="signal-card__scores">
+              <div class="signal-card__score">31 <span>/ 100</span></div>
+              <div class="signal-card__confidence">90% confidence</div>
+            </div>
+            <div class="signal-card__bar-track">
+              <div class="signal-card__bar-fill signal-card__bar-fill--high" style="width: 31%;"></div>
+            </div>
+            <div class="evidence-tags">
+              <span class="evidence-tag">Combined signal score</span>
+              <span class="evidence-tag">Escalated by conversation risk</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script src="js/main.js"></script>
+</body>
+</html>
