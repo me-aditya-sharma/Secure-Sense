@@ -90,7 +90,24 @@
           </button>
         </div>
 
+        <div class="form-group mt-3">
+          <label class="form-label" for="call-transcript">Call transcript</label>
+          <textarea id="call-transcript" class="form-textarea" data-transcript-input placeholder="Paste or type the conversation transcript here for NLP risk scoring..." rows="4"></textarea>
+          <div class="form-hint">Transcript text is analyzed for social-engineering cues, pressure tactics, and scam intent.</div>
+        </div>
+
+        <div class="error-banner hidden" data-error-banner role="alert">
+          <svg class="error-banner__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <div class="error-banner__content">
+            <div class="error-banner__title">Analysis failed</div>
+            <div class="error-banner__message" data-error-message>Unable to process call recording. Please verify the backend service and try again.</div>
+          </div>
+        </div>
+
         <button type="button" class="btn-primary btn-block mt-3" data-analyze-btn disabled>
+          <span class="loading-spinner hidden" data-analyze-spinner aria-hidden="true"></span>
           <span data-analyze-label>Analyze recording</span>
         </button>
       </div>
@@ -108,7 +125,7 @@
 
         <div class="stage-list">
 
-          <div class="stage-item" data-stage>
+          <div class="stage-item" data-stage="voice_authentication">
             <div class="stage-item__marker">1</div>
             <div class="stage-item__body">
               <div class="stage-item__title">Voice Authentication</div>
@@ -117,7 +134,7 @@
             <span class="stage-item__status" data-stage-status>Waiting</span>
           </div>
 
-          <div class="stage-item" data-stage>
+          <div class="stage-item" data-stage="behaviour">
             <div class="stage-item__marker">2</div>
             <div class="stage-item__body">
               <div class="stage-item__title">Behaviour</div>
@@ -126,7 +143,7 @@
             <span class="stage-item__status" data-stage-status>Waiting</span>
           </div>
 
-          <div class="stage-item" data-stage>
+          <div class="stage-item" data-stage="conversation">
             <div class="stage-item__marker">3</div>
             <div class="stage-item__body">
               <div class="stage-item__title">Conversation</div>
@@ -135,11 +152,11 @@
             <span class="stage-item__status" data-stage-status>Waiting</span>
           </div>
 
-          <div class="stage-item" data-stage>
+          <div class="stage-item" data-stage="call_trust">
             <div class="stage-item__marker">4</div>
             <div class="stage-item__body">
               <div class="stage-item__title">Call Trust</div>
-              <div class="stage-item__desc">Combines all signals into a single trust decision</div>
+              <div class="stage-item__desc">Combines all signals into a single composite decision</div>
             </div>
             <span class="stage-item__status" data-stage-status>Waiting</span>
           </div>
@@ -150,102 +167,102 @@
       <div class="hidden" data-result-panel>
         <div class="stack">
 
-          <div class="decision-panel decision-panel--high">
-            <div class="decision-panel__score">31<span>Trust score / 100</span></div>
+          <div class="decision-panel decision-panel--high" data-decision-panel>
+            <div class="decision-panel__score"><span data-decision-score>31</span><span>Risk score / 100</span></div>
             <div class="decision-panel__body">
-              <div class="decision-panel__action">Pause call — verify separately</div>
-              <div class="decision-panel__desc">End the call and confirm the caller's identity through a separate, trusted channel before taking any action.</div>
+              <div class="decision-panel__action" data-decision-action>Pause call — verify separately</div>
+              <div class="decision-panel__desc" data-decision-desc>End the call and confirm the caller's identity through a separate, trusted channel before taking any action.</div>
             </div>
             <div class="decision-panel__badge-wrap">
-              <span class="risk-badge risk-badge--high">
+              <span class="risk-badge risk-badge--high" data-decision-badge>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
                 High risk
               </span>
             </div>
           </div>
 
-          <div class="signal-card">
+          <div class="signal-card" data-signal-card="voice_authentication">
             <div class="signal-card__head">
               <span class="signal-card__name">Voice Authentication</span>
-              <span class="risk-badge risk-badge--low">
+              <span class="risk-badge risk-badge--low" data-signal-badge>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
                 Low risk
               </span>
             </div>
             <div class="signal-card__scores">
-              <div class="signal-card__score">91 <span>/ 100</span></div>
-              <div class="signal-card__confidence">96% confidence</div>
+              <div class="signal-card__score" data-signal-score>91 <span>/ 100</span></div>
+              <div class="signal-card__confidence" data-signal-confidence>96% confidence</div>
             </div>
             <div class="signal-card__bar-track">
-              <div class="signal-card__bar-fill signal-card__bar-fill--low" style="width: 91%;"></div>
+              <div class="signal-card__bar-fill signal-card__bar-fill--low" data-signal-bar style="width: 91%;"></div>
             </div>
-            <div class="evidence-tags">
+            <div class="evidence-tags" data-signal-evidence>
               <span class="evidence-tag">Voiceprint matched</span>
               <span class="evidence-tag">Stable pitch profile</span>
               <span class="evidence-tag">No synthesis artifacts</span>
             </div>
           </div>
 
-          <div class="signal-card">
+          <div class="signal-card" data-signal-card="behaviour">
             <div class="signal-card__head">
               <span class="signal-card__name">Behaviour</span>
-              <span class="risk-badge risk-badge--medium">
+              <span class="risk-badge risk-badge--medium" data-signal-badge>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
                 Medium risk
               </span>
             </div>
             <div class="signal-card__scores">
-              <div class="signal-card__score">54 <span>/ 100</span></div>
-              <div class="signal-card__confidence">84% confidence</div>
+              <div class="signal-card__score" data-signal-score>54 <span>/ 100</span></div>
+              <div class="signal-card__confidence" data-signal-confidence>84% confidence</div>
             </div>
             <div class="signal-card__bar-track">
-              <div class="signal-card__bar-fill signal-card__bar-fill--medium" style="width: 54%;"></div>
+              <div class="signal-card__bar-fill signal-card__bar-fill--medium" data-signal-bar style="width: 54%;"></div>
             </div>
-            <div class="evidence-tags">
+            <div class="evidence-tags" data-signal-evidence>
               <span class="evidence-tag">Unusual pacing</span>
               <span class="evidence-tag">Repeated hesitation</span>
               <span class="evidence-tag">Scripted phrasing</span>
             </div>
           </div>
 
-          <div class="signal-card">
+          <div class="signal-card" data-signal-card="conversation">
             <div class="signal-card__head">
               <span class="signal-card__name">Conversation</span>
-              <span class="risk-badge risk-badge--high">
+              <span class="risk-badge risk-badge--high" data-signal-badge>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
                 High risk
               </span>
             </div>
             <div class="signal-card__scores">
-              <div class="signal-card__score">22 <span>/ 100</span></div>
-              <div class="signal-card__confidence">91% confidence</div>
+              <div class="signal-card__score" data-signal-score>22 <span>/ 100</span></div>
+              <div class="signal-card__confidence" data-signal-confidence>91% confidence</div>
             </div>
             <div class="signal-card__bar-track">
-              <div class="signal-card__bar-fill signal-card__bar-fill--high" style="width: 22%;"></div>
+              <div class="signal-card__bar-fill signal-card__bar-fill--high" data-signal-bar style="width: 22%;"></div>
             </div>
-            <div class="evidence-tags">
+            <div class="evidence-tags" data-signal-evidence>
               <span class="evidence-tag">Urgency language</span>
               <span class="evidence-tag">Requests OTP</span>
               <span class="evidence-tag">Pressure tactics</span>
             </div>
           </div>
 
-          <div class="signal-card">
+          <div class="signal-card" data-signal-card="call_trust">
             <div class="signal-card__head">
               <span class="signal-card__name">Call Trust</span>
-              <span class="risk-badge risk-badge--high">
+              <span class="risk-badge risk-badge--high" data-signal-badge>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
                 High risk
               </span>
             </div>
             <div class="signal-card__scores">
-              <div class="signal-card__score">31 <span>/ 100</span></div>
-              <div class="signal-card__confidence">90% confidence</div>
+              <div class="signal-card__score" data-signal-score>31 <span>/ 100</span></div>
+              <div class="signal-card__confidence" data-signal-confidence>90% confidence</div>
             </div>
             <div class="signal-card__bar-track">
-              <div class="signal-card__bar-fill signal-card__bar-fill--high" style="width: 31%;"></div>
+              <div class="signal-card__bar-fill signal-card__bar-fill--high" data-signal-bar style="width: 31%;"></div>
             </div>
-            <div class="evidence-tags">
+            <div class="evidence-tags" data-signal-evidence>
               <span class="evidence-tag">Combined signal score</span>
               <span class="evidence-tag">Escalated by conversation risk</span>
             </div>
