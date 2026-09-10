@@ -181,6 +181,119 @@
             </div>
           </div>
 
+          <!-- Challenge Section (shown on MEDIUM risk) -->
+          <div class="card hidden" data-challenge-panel>
+            <div class="section-head">
+              <div class="icon-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="M9 12h6m-3-3v6"/>
+                </svg>
+              </div>
+              <div>
+                <h2>Identity Challenge</h2>
+                <p>Upload a second voice clip to confirm the caller's identity</p>
+              </div>
+            </div>
+
+            <div class="upload-zone" data-challenge-upload-zone tabindex="0" role="button" aria-label="Upload second voice clip">
+              <div class="upload-zone__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                  <line x1="12" y1="19" x2="12" y2="23"/>
+                  <line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
+              </div>
+              <div class="upload-zone__title">Tap to upload second voice clip</div>
+              <div class="upload-zone__hint">Drag and drop, or <strong>browse files</strong></div>
+              <input type="file" accept="audio/*" data-challenge-upload-input aria-hidden="true">
+            </div>
+
+            <div class="file-chip hidden" data-challenge-file-chip>
+              <div class="file-chip__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              </div>
+              <div class="file-chip__body">
+                <div class="file-chip__name" data-challenge-file-name>challenge_clip.wav</div>
+                <div class="file-chip__meta" data-challenge-file-meta>1.2 MB</div>
+              </div>
+              <button type="button" class="file-chip__remove" data-challenge-file-remove aria-label="Remove challenge file">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+            <button type="button" class="btn-primary btn-block mt-3" data-challenge-verify-btn disabled>
+              <span class="loading-spinner hidden" data-challenge-spinner aria-hidden="true"></span>
+              <span data-challenge-label>Verify caller identity</span>
+            </button>
+
+            <div class="challenge-result hidden mt-3" data-challenge-result>
+              <div class="challenge-result__badge-wrap">
+                <span class="risk-badge" data-challenge-badge></span>
+              </div>
+              <div class="challenge-result__title" data-challenge-title></div>
+              <div class="challenge-result__desc" data-challenge-desc></div>
+              <div class="evidence-tags mt-3" data-challenge-evidence></div>
+            </div>
+          </div>
+
+          <!-- Guardian Section (shown on HIGH risk, or on challenge 'no_match') -->
+          <div class="card hidden" data-guardian-panel>
+            <div class="section-head">
+              <div class="icon-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="8.5" cy="7" r="4"/>
+                  <line x1="20" y1="8" x2="20" y2="14"/>
+                  <line x1="23" y1="11" x2="17" y2="11"/>
+                </svg>
+              </div>
+              <div>
+                <h2>Guardian Alert</h2>
+                <p>High-risk call flagged — secondary guardian verification protocol triggered</p>
+              </div>
+            </div>
+
+            <div class="guardian-contact-card">
+              <div class="guardian-contact-card__avatar">RS</div>
+              <div class="guardian-contact-card__body">
+                <div class="guardian-contact-card__name">Rohan Sharma <span class="guardian-contact-card__rel">(Son)</span></div>
+                <div class="guardian-contact-card__phone">+91 90XXX XXX12</div>
+              </div>
+              <span class="guardian-contact-card__badge">Primary Guardian</span>
+            </div>
+
+            <div class="guardian-status" data-guardian-status-box>
+              <div class="guardian-status__header">
+                <span class="loading-spinner" data-guardian-spinner aria-hidden="true" style="border-top-color: var(--color-primary); border-color: rgba(18, 59, 68, 0.2);"></span>
+                <span class="guardian-status__text" data-guardian-status-text>Alert sent — awaiting response</span>
+              </div>
+            </div>
+
+            <div class="guardian-banner hidden mt-3" data-guardian-banner>
+              <div class="guardian-banner__icon" data-guardian-banner-icon></div>
+              <div class="guardian-banner__body">
+                <div class="guardian-banner__title" data-guardian-banner-title></div>
+                <div class="guardian-banner__desc" data-guardian-banner-desc></div>
+              </div>
+            </div>
+
+            <div class="guardian-controls mt-3">
+              <div class="guardian-controls__label">Live Demo Simulation Override:</div>
+              <div class="guardian-controls__btns">
+                <button type="button" class="btn-secondary" data-guardian-approve-btn>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+                  Simulate Approve
+                </button>
+                <button type="button" class="btn-secondary" data-guardian-deny-btn>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  Simulate Deny
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div class="signal-card" data-signal-card="voice_authentication">
             <div class="signal-card__head">
               <span class="signal-card__name">Voice Authentication</span>

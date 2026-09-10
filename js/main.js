@@ -1,7 +1,9 @@
 /* =========================================================
    SecureSense — shared JS
    Day 2: Audio + Transcript -> POST /analyze -> 4 Signals ->
-   Composite Risk -> Decision UI rendering.
+          Composite Risk -> Decision UI rendering.
+   Day 3: Identity Challenge Flow (Medium Risk) +
+          Guardian Alert & Escalation Flow (High Risk).
    ========================================================= */
 
 (function () {
@@ -19,6 +21,7 @@
   }
 
   var SESSION_KEY = 'securesense_user';
+  var currentCallEventId = 'evt_' + Date.now();
 
   /* ---------- Session helpers ---------- */
 
@@ -44,6 +47,17 @@
     var parts = name.trim().split(/\s+/);
     var chars = parts.slice(0, 2).map(function (p) { return p.charAt(0).toUpperCase(); });
     return chars.join('');
+  }
+
+  function getSessionSeed(extra) {
+    var user = getUser();
+    var seedStr = (user ? (user.name || '') + (user.phone || '') : 'demo_seed') + '_' + (currentCallEventId || '') + '_' + (extra || '');
+    var hash = 0;
+    for (var i = 0; i < seedStr.length; i++) {
+      hash = ((hash << 5) - hash) + seedStr.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash);
   }
 
   /* ---------- Login page ---------- */
@@ -156,6 +170,8 @@
     if (resultPanel) resultPanel.classList.add('hidden');
 
     hideError();
+    hideChallengePanel();
+    hideGuardianPanel();
 
     var analyzeBtn = document.querySelector('[data-analyze-btn]');
     var spinner = document.querySelector('[data-analyze-spinner]');
@@ -313,10 +329,369 @@
     };
   }
 
+  /* ---------- Challenge & Guardian Panels Handling ---------- */
+
+  var selectedChallengeFile = null;
+  var isChallengeVerifying = false;
+  var guardianTimer = null;
+
+  function resetChallengePanel() {
+    selectedChallengeFile = null;
+    isChallengeVerifying = false;
+
+    var input = document.querySelector('[data-challenge-upload-input]');
+    if (input) input.value = '';
+
+    var chip = document.querySelector('[data-challenge-file-chip]');
+    if (chip) chip.classList.add('hidden');
+
+    var resultBox = document.querySelector('[data-challenge-result]');
+    if (resultBox) resultBox.classList.add('hidden');
+
+    var btn = document.querySelector('[data-challenge-verify-btn]');
+    var spinner = document.querySelector('[data-challenge-spinner]');
+    var label = document.querySelector('[data-challenge-label]');
+    if (btn) {
+      btn.disabled = true;
+      btn.classList.remove('is-loading');
+    }
+    if (spinner) spinner.classList.add('hidden');
+    if (label) label.textContent = 'Verify caller identity';
+  }
+
+  function showChallengePanel() {
+    resetChallengePanel();
+    var panel = document.querySelector('[data-challenge-panel]');
+    if (panel) panel.classList.remove('hidden');
+  }
+
+  function hideChallengePanel() {
+    var panel = document.querySelector('[data-challenge-panel]');
+    if (panel) panel.classList.add('hidden');
+  }
+
+  function resetGuardianPanel() {
+    if (guardianTimer) {
+      clearTimeout(guardianTimer);
+      guardianTimer = null;
+    }
+
+    var statusBox = document.querySelector('[data-guardian-status-box]');
+    if (statusBox) statusBox.classList.remove('hidden');
+
+    var statusText = document.querySelector('[data-guardian-status-text]');
+    if (statusText) statusText.textContent = 'Alert sent — awaiting response';
+
+    var spinner = document.querySelector('[data-guardian-spinner]');
+    if (spinner) spinner.classList.remove('hidden');
+
+    var banner = document.querySelector('[data-guardian-banner]');
+    if (banner) banner.classList.add('hidden');
+  }
+
+  function showGuardianPanel() {
+    resetGuardianPanel();
+    var panel = document.querySelector('[data-guardian-panel]');
+    if (panel) panel.classList.remove('hidden');
+  }
+
+  function hideGuardianPanel() {
+    if (guardianTimer) {
+      clearTimeout(guardianTimer);
+      guardianTimer = null;
+    }
+    var panel = document.querySelector('[data-guardian-panel]');
+    if (panel) panel.classList.add('hidden');
+  }
+
+  function applyGuardianOutcome(isApproved) {
+    if (guardianTimer) {
+      clearTimeout(guardianTimer);
+      guardianTimer = null;
+    }
+
+    var statusBox = document.querySelector('[data-guardian-status-box]');
+    if (statusBox) statusBox.classList.add('hidden');
+
+    var banner = document.querySelector('[data-guardian-banner]');
+    var icon = document.querySelector('[data-guardian-banner-icon]');
+    var title = document.querySelector('[data-guardian-banner-title]');
+    var desc = document.querySelector('[data-guardian-banner-desc]');
+
+    if (!banner) return;
+
+    if (isApproved) {
+      banner.className = 'guardian-banner guardian-banner--approved mt-3';
+      if (icon) {
+        icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>';
+      }
+      if (title) title.textContent = 'Guardian approved — call may proceed with caution';
+      if (desc) desc.textContent = 'Rohan Sharma confirmed caller authorization via biometric mobile push approval.';
+    } else {
+      banner.className = 'guardian-banner guardian-banner--denied mt-3';
+      if (icon) {
+        icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+      }
+      if (title) title.textContent = 'Guardian denied — call blocked, transaction paused';
+      if (desc) desc.textContent = 'Guardian rejected verification request. High-risk alert recorded and call flagged for fraud review.';
+    }
+
+    banner.classList.remove('hidden');
+  }
+
+  function startGuardianAutoSimulation() {
+    if (guardianTimer) clearTimeout(guardianTimer);
+
+    // Deterministic outcome per session (approx 70% approve / 30% deny)
+    var isApproved = (getSessionSeed('guardian_auto') % 10) < 7;
+
+    guardianTimer = setTimeout(function () {
+      applyGuardianOutcome(isApproved);
+    }, 2000);
+  }
+
+  function initGuardianControls() {
+    var approveBtn = document.querySelector('[data-guardian-approve-btn]');
+    var denyBtn = document.querySelector('[data-guardian-deny-btn]');
+
+    if (approveBtn) {
+      approveBtn.addEventListener('click', function () {
+        applyGuardianOutcome(true);
+      });
+    }
+
+    if (denyBtn) {
+      denyBtn.addEventListener('click', function () {
+        applyGuardianOutcome(false);
+      });
+    }
+  }
+
+  function renderChallengeResult(res) {
+    isChallengeVerifying = false;
+
+    var btn = document.querySelector('[data-challenge-verify-btn]');
+    var spinner = document.querySelector('[data-challenge-spinner]');
+    var label = document.querySelector('[data-challenge-label]');
+
+    if (spinner) spinner.classList.add('hidden');
+    if (btn) {
+      btn.classList.remove('is-loading');
+      btn.disabled = false;
+    }
+    if (label) label.textContent = 'Re-verify identity';
+
+    var resultBox = document.querySelector('[data-challenge-result]');
+    var badge = document.querySelector('[data-challenge-badge]');
+    var title = document.querySelector('[data-challenge-title]');
+    var desc = document.querySelector('[data-challenge-desc]');
+    var evidence = document.querySelector('[data-challenge-evidence]');
+
+    if (!resultBox) return;
+
+    var isMatch = res && res.status === 'match';
+
+    if (isMatch) {
+      if (badge) {
+        badge.className = 'risk-badge risk-badge--low';
+        badge.innerHTML = getBadgeSvg('low') + ' Match confirmed';
+      }
+      if (title) title.textContent = 'Identity confirmed';
+      if (desc) desc.textContent = 'Second voice sample matched the enrolled voiceprint baseline. Authenticity verified.';
+    } else {
+      if (badge) {
+        badge.className = 'risk-badge risk-badge--high';
+        badge.innerHTML = getBadgeSvg('high') + ' Mismatch detected';
+      }
+      if (title) title.textContent = 'Identity could not be confirmed — escalate to Guardian';
+      if (desc) desc.textContent = 'Second voice sample failed acoustic match against enrolled baseline. Escalating call to Guardian Protocol.';
+    }
+
+    if (evidence) {
+      evidence.innerHTML = '';
+      var items = (res && Array.isArray(res.evidence)) ? res.evidence : (isMatch ? ['Voiceprint matches enrolled sample', 'Consistent pitch and cadence'] : ['Voiceprint mismatch detected', 'Acoustic feature deviation exceeds threshold']);
+      items.forEach(function (item) {
+        var tag = document.createElement('span');
+        tag.className = 'evidence-tag';
+        tag.textContent = item;
+        evidence.appendChild(tag);
+      });
+    }
+
+    resultBox.classList.remove('hidden');
+
+    if (!isMatch) {
+      // Escalate to Guardian
+      showGuardianPanel();
+      startGuardianAutoSimulation();
+    }
+  }
+
+  function executeChallenge() {
+    if (isChallengeVerifying || !selectedChallengeFile) return;
+
+    isChallengeVerifying = true;
+    var btn = document.querySelector('[data-challenge-verify-btn]');
+    var spinner = document.querySelector('[data-challenge-spinner]');
+    var label = document.querySelector('[data-challenge-label]');
+
+    if (btn) {
+      btn.classList.add('is-loading');
+      btn.disabled = true;
+    }
+    if (spinner) spinner.classList.remove('hidden');
+    if (label) label.textContent = 'Verifying\u2026';
+
+    if (MOCK_MODE) {
+      setTimeout(function () {
+        // Deterministic mock outcome per session (~70% match / 30% no_match)
+        var isMatch = (getSessionSeed('challenge_result') % 10) < 7;
+        var mockResult = isMatch
+          ? {
+              status: 'match',
+              score: 88,
+              confidence: 0.93,
+              evidence: [
+                'Voiceprint matches enrolled sample',
+                'Consistent pitch and cadence baseline',
+                'Acoustic spectral match confirmed (88/100)'
+              ]
+            }
+          : {
+              status: 'no_match',
+              score: 24,
+              confidence: 0.91,
+              evidence: [
+                'Voiceprint mismatch detected',
+                'Acoustic feature deviation exceeds threshold',
+                'Spectral similarity score: 24/100'
+              ]
+            };
+        renderChallengeResult(mockResult);
+      }, 1500);
+      return;
+    }
+
+    var formData = new FormData();
+    formData.append('call_event_id', currentCallEventId);
+    formData.append('second_clip', selectedChallengeFile);
+
+    fetch(API_BASE + '/challenge', {
+      method: 'POST',
+      body: formData
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Challenge verification failed');
+        return res.json();
+      })
+      .then(function (data) {
+        var isMatch = (data.status === 'match' || data.status === 'completed' || (data.challenge_score && data.challenge_score.score >= 50));
+        renderChallengeResult({
+          status: isMatch ? 'match' : 'no_match',
+          score: data.challenge_score ? data.challenge_score.score : (isMatch ? 88 : 24),
+          confidence: data.challenge_score ? data.challenge_score.confidence : 0.9,
+          evidence: data.challenge_score && data.challenge_score.evidence ? data.challenge_score.evidence : []
+        });
+      })
+      .catch(function () {
+        renderChallengeResult({
+          status: 'no_match',
+          score: 20,
+          confidence: 0.85,
+          evidence: ['Voice match challenge rejected by backend']
+        });
+      });
+  }
+
+  function initChallengeZone() {
+    var zone = document.querySelector('[data-challenge-upload-zone]');
+    var input = document.querySelector('[data-challenge-upload-input]');
+    var chip = document.querySelector('[data-challenge-file-chip]');
+    var chipName = document.querySelector('[data-challenge-file-name]');
+    var chipMeta = document.querySelector('[data-challenge-file-meta]');
+    var removeBtn = document.querySelector('[data-challenge-file-remove]');
+    var verifyBtn = document.querySelector('[data-challenge-verify-btn]');
+
+    if (!zone || !input) return;
+
+    function showChallengeFile(file) {
+      if (!file) return;
+      selectedChallengeFile = file;
+      if (chipName) chipName.textContent = file.name;
+      if (chipMeta) chipMeta.textContent = formatFileSize(file.size);
+      if (chip) chip.classList.remove('hidden');
+      if (verifyBtn) verifyBtn.disabled = false;
+    }
+
+    function clearChallengeFile() {
+      selectedChallengeFile = null;
+      input.value = '';
+      if (chip) chip.classList.add('hidden');
+      if (verifyBtn) verifyBtn.disabled = true;
+      var resultBox = document.querySelector('[data-challenge-result]');
+      if (resultBox) resultBox.classList.add('hidden');
+    }
+
+    zone.addEventListener('click', function () {
+      input.click();
+    });
+
+    zone.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        input.click();
+      }
+    });
+
+    input.addEventListener('change', function () {
+      if (input.files && input.files[0]) {
+        showChallengeFile(input.files[0]);
+      }
+    });
+
+    ['dragover', 'dragenter'].forEach(function (evt) {
+      zone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        zone.classList.add('is-dragover');
+      });
+    });
+
+    ['dragleave', 'dragend', 'drop'].forEach(function (evt) {
+      zone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        zone.classList.remove('is-dragover');
+      });
+    });
+
+    zone.addEventListener('drop', function (e) {
+      var files = e.dataTransfer && e.dataTransfer.files;
+      if (files && files[0]) {
+        input.files = files;
+        showChallengeFile(files[0]);
+      }
+    });
+
+    if (removeBtn) {
+      removeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        clearChallengeFile();
+      });
+    }
+
+    if (verifyBtn) {
+      verifyBtn.addEventListener('click', function () {
+        if (verifyBtn.disabled || isChallengeVerifying) return;
+        executeChallenge();
+      });
+    }
+  }
+
   /* ---------- Render response into DOM ---------- */
 
   function renderAnalysisResult(raw) {
     if (!raw) return;
+
+    currentCallEventId = raw.call_event_id || ('evt_' + Date.now());
 
     var composite = raw.composite || {};
     var compScore = typeof composite.score === 'number' ? composite.score : (typeof raw.composite_risk === 'number' ? raw.composite_risk : 89);
@@ -350,6 +725,19 @@
     if (badgeEl) {
       badgeEl.className = 'risk-badge risk-badge--' + compTier;
       badgeEl.innerHTML = getBadgeSvg(compTier) + ' ' + compRiskLabel;
+    }
+
+    // Day 3: Challenge vs Guardian Flow conditional rendering
+    if (compTier === 'low') {
+      hideChallengePanel();
+      hideGuardianPanel();
+    } else if (compTier === 'medium') {
+      showChallengePanel();
+      hideGuardianPanel();
+    } else if (compTier === 'high') {
+      hideChallengePanel();
+      showGuardianPanel();
+      startGuardianAutoSimulation();
     }
 
     // Signals
@@ -638,5 +1026,7 @@
     initNavbar();
     initNavPills();
     initUploadZone();
+    initChallengeZone();
+    initGuardianControls();
   });
 })();

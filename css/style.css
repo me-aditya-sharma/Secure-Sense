@@ -1297,3 +1297,235 @@ main {
   line-height: 1.45;
 }
 
+/* =========================================================
+   Day 3: Challenge & Guardian styles
+   ========================================================= */
+
+/* ---------- Challenge Flow (Medium Risk) ---------- */
+.challenge-result {
+  background: var(--color-surface-quiet);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sharp);
+  padding: calc(var(--spacing-unit) * 2.5);
+}
+
+.challenge-result__badge-wrap {
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+}
+
+.challenge-result__title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.challenge-result__desc {
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* ---------- Guardian Contact Card ---------- */
+.guardian-contact-card {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing-unit) * 1.75);
+  padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 2.5);
+  background: var(--color-surface-quiet);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sharp);
+  margin-bottom: calc(var(--spacing-unit) * 2.5);
+}
+
+.guardian-contact-card__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.guardian-contact-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.guardian-contact-card__name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 2px;
+}
+
+.guardian-contact-card__rel {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.guardian-contact-card__phone {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.guardian-contact-card__badge {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-full);
+  padding: calc(var(--spacing-unit) * 0.6) calc(var(--spacing-unit) * 1.5);
+  flex-shrink: 0;
+}
+
+/* ---------- Guardian Status Row ---------- */
+.guardian-status {
+  display: flex;
+  align-items: center;
+  background: var(--color-surface-quiet);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sharp);
+  padding: calc(var(--spacing-unit) * 1.75) calc(var(--spacing-unit) * 2.5);
+}
+
+.guardian-status__header {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing-unit) * 1.5);
+}
+
+.guardian-status__text {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.guardian-status .loading-spinner {
+  width: 18px;
+  height: 18px;
+  border-width: 2.5px;
+  border-top-color: var(--color-primary);
+  border-color: rgba(18, 59, 68, 0.2);
+  flex-shrink: 0;
+}
+
+/* ---------- Guardian Banner (Decision-Panel Style) ---------- */
+.guardian-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--spacing-unit) * 2);
+  border-radius: var(--radius-sharp);
+  padding: calc(var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 3);
+  border: 1px solid var(--color-border);
+  border-left-width: 6px;
+  border-left-style: solid;
+}
+
+.guardian-banner--approved {
+  background: var(--color-low-bg);
+  border-color: var(--color-low);
+  border-left-color: var(--color-low);
+}
+
+.guardian-banner--approved .guardian-banner__icon {
+  color: var(--color-low);
+}
+
+.guardian-banner--approved .guardian-banner__title {
+  color: #14532d;
+}
+
+.guardian-banner--approved .guardian-banner__desc {
+  color: #166534;
+}
+
+.guardian-banner--denied {
+  background: var(--color-high-bg);
+  border-color: var(--color-high);
+  border-left-color: var(--color-high);
+}
+
+.guardian-banner--denied .guardian-banner__icon {
+  color: var(--color-high);
+}
+
+.guardian-banner--denied .guardian-banner__title {
+  color: var(--color-high-dark);
+}
+
+.guardian-banner--denied .guardian-banner__desc {
+  color: var(--color-high-dark);
+}
+
+.guardian-banner__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.guardian-banner__icon svg {
+  width: 24px;
+  height: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  display: block;
+}
+
+.guardian-banner__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.guardian-banner__title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.guardian-banner__desc {
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+/* ---------- Guardian Demo Simulation Controls ---------- */
+.guardian-controls {
+  padding-top: calc(var(--spacing-unit) * 2.5);
+  margin-top: calc(var(--spacing-unit) * 2.5);
+  border-top: 1px dashed var(--color-border);
+}
+
+.guardian-controls__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.guardian-controls__btns {
+  display: flex;
+  gap: calc(var(--spacing-unit) * 1.5);
+  flex-wrap: wrap;
+}
+
+.guardian-controls__btns .btn-secondary {
+  min-height: 40px;
+  padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2.5);
+  font-size: 13.5px;
+}
+
+
+
