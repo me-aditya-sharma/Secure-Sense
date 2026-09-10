@@ -13,7 +13,7 @@
 
   /* ---------- Configuration ---------- */
   var API_BASE = 'http://localhost:8000';
-  var MOCK_MODE = true; // Set to false when live backend on API_BASE is confirmed
+  var MOCK_MODE = false; // Set to false when live backend on API_BASE is confirmed
 
   if (MOCK_MODE) {
     console.warn(
@@ -561,25 +561,25 @@
         var isMatch = (getSessionSeed('challenge_result') % 10) < 7;
         var mockResult = isMatch
           ? {
-              status: 'match',
-              score: 88,
-              confidence: 0.93,
-              evidence: [
-                'Voiceprint matches enrolled sample',
-                'Consistent pitch and cadence baseline',
-                'Acoustic spectral match confirmed (88/100)'
-              ]
-            }
+            status: 'match',
+            score: 88,
+            confidence: 0.93,
+            evidence: [
+              'Voiceprint matches enrolled sample',
+              'Consistent pitch and cadence baseline',
+              'Acoustic spectral match confirmed (88/100)'
+            ]
+          }
           : {
-              status: 'no_match',
-              score: 24,
-              confidence: 0.91,
-              evidence: [
-                'Voiceprint mismatch detected',
-                'Acoustic feature deviation exceeds threshold',
-                'Spectral similarity score: 24/100'
-              ]
-            };
+            status: 'no_match',
+            score: 24,
+            confidence: 0.91,
+            evidence: [
+              'Voiceprint mismatch detected',
+              'Acoustic feature deviation exceeds threshold',
+              'Spectral similarity score: 24/100'
+            ]
+          };
         renderChallengeResult(mockResult);
       }, 1500);
       return;
@@ -846,7 +846,7 @@
       setTimeout(function () {
         if (labelEl) labelEl.textContent = 'Copy';
       }, 2000);
-    } catch (e) {}
+    } catch (e) { }
     document.body.removeChild(ta);
   }
 

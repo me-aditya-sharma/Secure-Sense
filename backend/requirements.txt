@@ -3,3 +3,4 @@ uvicorn>=0.23.2
 pydantic>=2.3.0
 librosa>=1.0.0
 scipy>=1.15.0
+python-multipart>=0.0.9

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, File, UploadFile, Form
 from datetime import datetime
 import base64
 import os
@@ -34,15 +34,18 @@ async def enroll(request: EnrollRequest, db=Depends(get_db)):
     )
 
 @app.post("/analyze", response_model=AnalyzeResponse)
-async def analyze(request: AnalyzeRequest, db=Depends(get_db)):
+async def analyze(
+    audio: UploadFile = File(...),
+    transcript: str = Form(...),
+    metadata: str = Form(...),
+    db=Depends(get_db)
+):
     # 1. Parse audio data
     temp_file = "temp_incoming.wav"
     try:
-        if request.audio_data.startswith("UklGR"):
-            with open(temp_file, "wb") as f:
-                f.write(base64.b64decode(request.audio_data))
-        else:
-            temp_file = "backend/audio/data/user2_imposter_1.wav"
+        contents = await audio.read()
+        with open(temp_file, "wb") as f:
+            f.write(contents)
     except Exception:
         temp_file = "backend/audio/data/user2_imposter_1.wav"
 
@@ -65,7 +68,6 @@ async def analyze(request: AnalyzeRequest, db=Depends(get_db)):
     behav_evidence = ["Normal pacing"] if behav_status == "OK" else ["Hesitation detected"]
 
     # 2. NLP Pipeline
-    transcript = random.choice(TEST_TRANSCRIPTS)
     nlp_result = score_transcript(transcript)
     
     conversation_score = nlp_result.get("score", 0)
@@ -105,7 +107,11 @@ async def analyze(request: AnalyzeRequest, db=Depends(get_db)):
     )
 
 @app.post("/challenge", response_model=ChallengeResponse)
-async def challenge(request: ChallengeRequest, db=Depends(get_db)):
+async def challenge(
+    call_event_id: str = Form(...),
+    second_clip: UploadFile = File(...),
+    db=Depends(get_db)
+):
     # MOCK RESPONSE
     return ChallengeResponse(
         status="completed",
