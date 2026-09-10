@@ -1,9 +1,11 @@
+
 /* =========================================================
    SecureSense — shared JS
    Day 2: Audio + Transcript -> POST /analyze -> 4 Signals ->
           Composite Risk -> Decision UI rendering.
    Day 3: Identity Challenge Flow (Medium Risk) +
-          Guardian Alert & Escalation Flow (High Risk).
+          Guardian Alert & Escalation Flow (High Risk) +
+          Audit Trail Section.
    ========================================================= */
 
 (function () {
@@ -119,6 +121,8 @@
   }
 
   var selectedFile = null;
+  var lastChallengeScore = 0;
+
   var stageTimers = [];
   var isAnalyzing = false;
 
@@ -172,6 +176,10 @@
     hideError();
     hideChallengePanel();
     hideGuardianPanel();
+
+    lastChallengeScore = 0;
+    var auditPanel = document.querySelector('[data-audit-panel]');
+    if (auditPanel) auditPanel.classList.add('hidden');
 
     var analyzeBtn = document.querySelector('[data-analyze-btn]');
     var spinner = document.querySelector('[data-analyze-spinner]');
@@ -490,6 +498,11 @@
     if (!resultBox) return;
 
     var isMatch = res && res.status === 'match';
+    lastChallengeScore = (res && typeof res.score === 'number') ? res.score : (isMatch ? 88 : 24);
+
+    // Update challenge score tile in Audit Trail if visible
+    var chalTile = document.querySelector('[data-audit-score-challenge]');
+    if (chalTile) chalTile.textContent = lastChallengeScore;
 
     if (isMatch) {
       if (badge) {
@@ -578,6 +591,9 @@
 
     fetch(API_BASE + '/challenge', {
       method: 'POST',
+      headers: {
+        'ngrok-skip-browser-warning': 'true'
+      },
       body: formData
     })
       .then(function (res) {
@@ -684,6 +700,176 @@
         executeChallenge();
       });
     }
+  }
+
+  /* ---------- Audit Trail Handling ---------- */
+
+  var fullAuditHash = '';
+
+  function formatReadableDate(dateInput) {
+    var d = dateInput ? new Date(dateInput) : new Date();
+    if (isNaN(d.getTime())) d = new Date();
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var day = d.getDate();
+    var month = months[d.getMonth()];
+    var year = d.getFullYear();
+    var hours = String(d.getHours()).padStart(2, '0');
+    var minutes = String(d.getMinutes()).padStart(2, '0');
+    return day + ' ' + month + ' ' + year + ', ' + hours + ':' + minutes;
+  }
+
+  function truncateMiddle(str, frontChars, backChars) {
+    if (!str) return '—';
+    var f = frontChars || 8;
+    var b = backChars || 9;
+    if (str.length <= f + b + 3) return str;
+    return str.substring(0, f) + '...' + str.substring(str.length - b);
+  }
+
+  function showAuditUnavailable() {
+    var auditPanel = document.querySelector('[data-audit-panel]');
+    var auditError = document.querySelector('[data-audit-error]');
+    var metaRow = document.querySelector('.audit-meta-row');
+    var scoresSec = document.querySelector('.audit-scores-section');
+    var hashSec = document.querySelector('.audit-hash-section');
+    if (metaRow) metaRow.classList.add('hidden');
+    if (scoresSec) scoresSec.classList.add('hidden');
+    if (hashSec) hashSec.classList.add('hidden');
+    if (auditError) auditError.classList.remove('hidden');
+    if (auditPanel) auditPanel.classList.remove('hidden');
+  }
+
+  function renderAuditRecord(auditData) {
+    if (!auditData) return;
+    var auditPanel = document.querySelector('[data-audit-panel]');
+    var auditError = document.querySelector('[data-audit-error]');
+    var metaRow = document.querySelector('.audit-meta-row');
+    var scoresSec = document.querySelector('.audit-scores-section');
+    var hashSec = document.querySelector('.audit-hash-section');
+
+    if (auditError) auditError.classList.add('hidden');
+    if (metaRow) metaRow.classList.remove('hidden');
+    if (scoresSec) scoresSec.classList.remove('hidden');
+    if (hashSec) hashSec.classList.remove('hidden');
+
+    var timeEl = document.querySelector('[data-audit-timestamp]');
+    var decisionBadge = document.querySelector('[data-audit-decision-badge]');
+    var voiceEl = document.querySelector('[data-audit-score-voice]');
+    var behaviourEl = document.querySelector('[data-audit-score-behaviour]');
+    var convEl = document.querySelector('[data-audit-score-conversation]');
+    var trustEl = document.querySelector('[data-audit-score-calltrust]');
+    var chalEl = document.querySelector('[data-audit-score-challenge]');
+    var hashEl = document.querySelector('[data-audit-hash]');
+
+    if (timeEl) timeEl.textContent = formatReadableDate(auditData.timestamp);
+
+    var rawDecision = (auditData.decision || 'PAUSE').toUpperCase().replace('-', '_');
+    var decisionLabel = rawDecision === 'PROCEED' ? 'Proceed' : (rawDecision === 'STEP_UP' ? 'Step-up' : 'Pause');
+    var decisionTier = rawDecision === 'PROCEED' ? 'low' : (rawDecision === 'STEP_UP' ? 'medium' : 'high');
+
+    if (decisionBadge) {
+      decisionBadge.className = 'risk-badge risk-badge--' + decisionTier;
+      decisionBadge.innerHTML = getBadgeSvg(decisionTier) + ' ' + decisionLabel;
+    }
+
+    var scores = auditData.scores || {};
+    if (voiceEl) voiceEl.textContent = (scores.voice_auth !== undefined) ? scores.voice_auth : '—';
+    if (behaviourEl) behaviourEl.textContent = (scores.behaviour !== undefined) ? scores.behaviour : '—';
+    if (convEl) convEl.textContent = (scores.conversation !== undefined) ? scores.conversation : '—';
+    if (trustEl) trustEl.textContent = (scores.call_trust !== undefined) ? scores.call_trust : '—';
+    if (chalEl) {
+      var cVal = (scores.challenge !== undefined && scores.challenge !== null) ? scores.challenge : lastChallengeScore;
+      chalEl.textContent = (cVal > 0) ? cVal : 'N/A';
+    }
+
+    fullAuditHash = auditData.audit_hash || 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+    if (hashEl) hashEl.textContent = truncateMiddle(fullAuditHash, 8, 9);
+
+    if (auditPanel) auditPanel.classList.remove('hidden');
+  }
+
+  function fetchAuditTrail(callEventId, analysisData) {
+    if (MOCK_MODE) {
+      var signals = (analysisData && analysisData.signals) || {};
+      var voiceScore = (signals.voice_authentication && signals.voice_authentication.score) !== undefined ? signals.voice_authentication.score : 72;
+      var behaviourScore = (signals.behaviour && signals.behaviour.score) !== undefined ? signals.behaviour.score : 58;
+      var conversationScore = (signals.conversation && signals.conversation.score) !== undefined ? signals.conversation.score : 92;
+      var callTrustScore = (signals.call_trust && signals.call_trust.score) !== undefined ? signals.call_trust.score : 88;
+      var comp = (analysisData && analysisData.composite) || {};
+      var decisionStr = comp.decision || 'PAUSE';
+
+      var mockAudit = {
+        timestamp: new Date().toISOString(),
+        user_id: (getUser() && getUser().name) || 'demo_user',
+        decision: decisionStr,
+        scores: {
+          voice_auth: voiceScore,
+          behaviour: behaviourScore,
+          conversation: conversationScore,
+          call_trust: callTrustScore,
+          challenge: lastChallengeScore || 0
+        },
+        audit_hash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      };
+      renderAuditRecord(mockAudit);
+      return;
+    }
+
+    fetch(API_BASE + '/audit?call_event_id=' + encodeURIComponent(callEventId), {
+      method: 'GET',
+      headers: {
+        'ngrok-skip-browser-warning': 'true'
+      }
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Audit record not available');
+        return res.json();
+      })
+      .then(function (auditData) {
+        renderAuditRecord(auditData);
+      })
+      .catch(function () {
+        showAuditUnavailable();
+      });
+  }
+
+  function fallbackCopy(text, labelEl) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      if (labelEl) labelEl.textContent = 'Copied!';
+      setTimeout(function () {
+        if (labelEl) labelEl.textContent = 'Copy';
+      }, 2000);
+    } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  function initAuditCopyBtn() {
+    var copyBtn = document.querySelector('[data-audit-copy-btn]');
+    var copyLabel = document.querySelector('[data-audit-copy-label]');
+    if (!copyBtn) return;
+
+    copyBtn.addEventListener('click', function () {
+      if (!fullAuditHash) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(fullAuditHash).then(function () {
+          if (copyLabel) copyLabel.textContent = 'Copied!';
+          setTimeout(function () {
+            if (copyLabel) copyLabel.textContent = 'Copy';
+          }, 2000);
+        }).catch(function () {
+          fallbackCopy(fullAuditHash, copyLabel);
+        });
+      } else {
+        fallbackCopy(fullAuditHash, copyLabel);
+      }
+    });
   }
 
   /* ---------- Render response into DOM ---------- */
@@ -805,6 +991,9 @@
     if (resultPanel) {
       resultPanel.classList.remove('hidden');
     }
+
+    // Automatically fetch Audit Trail once analysis completes
+    fetchAuditTrail(currentCallEventId, raw);
   }
 
   /* ---------- Execute Analysis (Mock or Real Fetch) ---------- */
@@ -911,6 +1100,9 @@
 
     fetch(API_BASE + '/analyze', {
       method: 'POST',
+      headers: {
+        'ngrok-skip-browser-warning': 'true'
+      },
       body: formData
     })
       .then(function (res) {
@@ -1028,5 +1220,7 @@
     initUploadZone();
     initChallengeZone();
     initGuardianControls();
+    initAuditCopyBtn();
   });
 })();
+
