@@ -13,6 +13,8 @@
 
   /* ---------- Configuration ---------- */
   var API_BASE = 'http://localhost:8000';
+  // http://localhost:8000
+  // https://poet-laurel-sandworm.ngrok-free.dev
   var MOCK_MODE = false; // Set to false when live backend on API_BASE is confirmed
 
   if (MOCK_MODE) {
@@ -826,6 +828,14 @@
         return res.json();
       })
       .then(function (auditData) {
+        if (auditData && (!auditData.scores || Object.keys(auditData.scores).length === 0)) {
+          auditData.scores = {
+            voice_auth: analysisData && analysisData.voice_auth ? analysisData.voice_auth.score : '—',
+            behaviour: analysisData && analysisData.behaviour ? analysisData.behaviour.score : '—',
+            conversation: analysisData && analysisData.conversation ? analysisData.conversation.score : '—',
+            call_trust: analysisData && analysisData.call_trust ? analysisData.call_trust.score : '—'
+          };
+        }
         renderAuditRecord(auditData);
       })
       .catch(function () {
@@ -1213,6 +1223,62 @@
     }
   }
 
+  function loadDashboardStats() {
+    var totalCallsEl = document.getElementById('dash-total-calls');
+    var flaggedCallsEl = document.getElementById('dash-flagged-calls');
+    var voiceMatchesEl = document.getElementById('dash-voice-matches');
+    var historyListEl = document.getElementById('dash-history-list');
+    
+    if (!totalCallsEl) return; // Not on dashboard page
+    
+    fetch(API_BASE + '/dashboard_stats', {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (totalCallsEl) totalCallsEl.textContent = data.total_calls || 0;
+      if (flaggedCallsEl) flaggedCallsEl.textContent = data.flagged_calls || 0;
+      if (voiceMatchesEl) voiceMatchesEl.textContent = data.voice_matches || 0;
+      
+      if (historyListEl && data.recent_history) {
+        historyListEl.innerHTML = '';
+        if (data.recent_history.length === 0) {
+          historyListEl.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--color-text-muted);">No recent calls found.</div>';
+        } else {
+          data.recent_history.forEach(function(call) {
+            var riskLevel = (call.risk_level || 'LOW').toLowerCase();
+            var metaStr = '{}';
+            try { metaStr = JSON.parse(call.metadata); } catch(e) {}
+            var phone = metaStr.user_id || 'Unknown';
+            var title = 'Call Analysis';
+            
+            var evidence = '';
+            if (call.voice_evidence && call.voice_evidence.length > 0) evidence += call.voice_evidence[0] + ', ';
+            if (call.conversation_evidence && call.conversation_evidence.length > 0) evidence += call.conversation_evidence[0];
+            if (!evidence) evidence = 'Analyzed against security baseline';
+            if (evidence.endsWith(', ')) evidence = evidence.slice(0, -2);
+            
+            var timeAgo = 'Just now'; // Simplified
+            
+            var html = '<div class="status-dot-item">' +
+              '<span class="status-dot status-dot--' + riskLevel + '"></span>' +
+              '<div class="status-dot-item__body">' +
+                '<div class="status-dot-item__title">' + title + '</div>' +
+                '<div class="status-dot-item__phone">' + phone + '</div>' +
+                '<div class="status-dot-item__meta">' + evidence + '</div>' +
+              '</div>' +
+              '<span class="status-dot-item__time">' + timeAgo + '</span>' +
+            '</div>';
+            historyListEl.insertAdjacentHTML('beforeend', html);
+          });
+        }
+      }
+    })
+    .catch(function(err) {
+      console.error('Failed to load dashboard stats:', err);
+    });
+  }
+
   /* ---------- Init ---------- */
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -1223,6 +1289,7 @@
     initChallengeZone();
     initGuardianControls();
     initAuditCopyBtn();
+    loadDashboardStats();
   });
 })();
 

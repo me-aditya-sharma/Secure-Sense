@@ -16,20 +16,28 @@ DB_NAME = os.getenv("DB_NAME", "securesense")
 DB_USER = os.getenv("DB_USER", "securesense")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "securesense")
 
-db_pool = psycopg2.pool.SimpleConnectionPool(
-    minconn=1,
-    maxconn=10,
-    host=DB_HOST,
-    port=DB_PORT,
-    dbname=DB_NAME,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    cursor_factory=psycopg2.extras.RealDictCursor,
-)
+try:
+    db_pool = psycopg2.pool.SimpleConnectionPool(
+        minconn=1,
+        maxconn=10,
+        host=DB_HOST,
+        port=DB_PORT,
+        dbname=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        cursor_factory=psycopg2.extras.RealDictCursor,
+    )
+except psycopg2.OperationalError as e:
+    print(f"Warning: Could not connect to the database. DB persistence will be unavailable. Error: {e}")
+    db_pool = None
 
 
 def get_db() -> Any:
     """FastAPI dependency - yields a pooled connection, returns it when the request ends."""
+    if db_pool is None:
+        yield None
+        return
+        
     conn = db_pool.getconn()
     try:
         yield conn
@@ -223,3 +231,52 @@ def get_latest_audit_for_call(db, call_event_id: int) -> Optional[dict]:
             (call_event_id,),
         )
         return cur.fetchone()
+
+def get_dashboard_stats(db: Any) -> dict:
+    """Gets dashboard statistics."""
+    if db is None:
+        return {
+            "total_calls": 0,
+            "flagged_calls": 0,
+            "voice_matches": 0,
+            "recent_history": []
+        }
+        
+    cur = db.cursor()
+    try:
+        cur.execute("SELECT COUNT(*) as count FROM call_events;")
+        total_calls = cur.fetchone()["count"]
+        
+        cur.execute("SELECT COUNT(*) as count FROM risk_decisions WHERE composite_risk >= 40;")
+        flagged_calls = cur.fetchone()["count"]
+        
+        # Count voice_matches using signal_scores
+        cur.execute("SELECT COUNT(*) as count FROM signal_scores WHERE voice_score > 70;")
+        voice_matches = cur.fetchone()["count"]
+        
+        cur.execute('''
+            SELECT c.id as call_event_id, c.metadata, r.risk_level, c.created_at, s.voice_evidence, s.conversation_evidence
+            FROM call_events c
+            LEFT JOIN risk_decisions r ON c.id = r.call_event_id
+            LEFT JOIN signal_scores s ON c.id = s.call_event_id
+            ORDER BY c.created_at DESC
+            LIMIT 5;
+        ''')
+        recent_history = cur.fetchall()
+        
+        return {
+            "total_calls": total_calls,
+            "flagged_calls": flagged_calls,
+            "voice_matches": voice_matches,
+            "recent_history": recent_history
+        }
+    except Exception as e:
+        print(f"Error getting dashboard stats: {e}")
+        return {
+            "total_calls": 0,
+            "flagged_calls": 0,
+            "voice_matches": 0,
+            "recent_history": []
+        }
+    finally:
+        cur.close()

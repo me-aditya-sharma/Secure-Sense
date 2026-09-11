@@ -57,15 +57,15 @@
 
     <div class="stat-row">
       <div class="stat-row__item">
-        <div class="stat-row__value">128</div>
+        <div class="stat-row__value" id="dash-total-calls">0</div>
         <div class="stat-row__label">Calls analyzed today</div>
       </div>
       <div class="stat-row__item">
-        <div class="stat-row__value">9</div>
+        <div class="stat-row__value" id="dash-flagged-calls">0</div>
         <div class="stat-row__label">Flagged for review</div>
       </div>
       <div class="stat-row__item">
-        <div class="stat-row__value">112</div>
+        <div class="stat-row__value" id="dash-voice-matches">0</div>
         <div class="stat-row__label">Voice matches confirmed</div>
       </div>
     </div>
@@ -105,43 +105,8 @@
       </div>
     </div>
 
-    <div class="list-card">
-      <div class="status-dot-item">
-        <span class="status-dot status-dot--high"></span>
-        <div class="status-dot-item__body">
-          <div class="status-dot-item__title">Loan verification</div>
-          <div class="status-dot-item__phone">+91 90XXX XXX14</div>
-          <div class="status-dot-item__meta">Voice mismatch detected, high urgency language</div>
-        </div>
-        <span class="status-dot-item__time">4 min ago</span>
-      </div>
-      <div class="status-dot-item">
-        <span class="status-dot status-dot--medium"></span>
-        <div class="status-dot-item__body">
-          <div class="status-dot-item__title">Card reissue</div>
-          <div class="status-dot-item__phone">+91 88XXX XXX52</div>
-          <div class="status-dot-item__meta">Background noise inconsistent with claimed location</div>
-        </div>
-        <span class="status-dot-item__time">22 min ago</span>
-      </div>
-      <div class="status-dot-item">
-        <span class="status-dot status-dot--low"></span>
-        <div class="status-dot-item__body">
-          <div class="status-dot-item__title">Account update</div>
-          <div class="status-dot-item__phone">+91 96XXX XXX87</div>
-          <div class="status-dot-item__meta">Voiceprint matched, conversation pattern normal</div>
-        </div>
-        <span class="status-dot-item__time">1 hr ago</span>
-      </div>
-      <div class="status-dot-item">
-        <span class="status-dot status-dot--low"></span>
-        <div class="status-dot-item__body">
-          <div class="status-dot-item__title">Balance enquiry</div>
-          <div class="status-dot-item__phone">+91 91XXX XXX33</div>
-          <div class="status-dot-item__meta">Voiceprint matched, low risk overall</div>
-        </div>
-        <span class="status-dot-item__time">3 hr ago</span>
-      </div>
+    <div class="list-card" id="dash-history-list">
+      <!-- Dynamic content will be injected here -->
     </div>
 
   </div>
