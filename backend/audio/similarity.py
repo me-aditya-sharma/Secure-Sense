@@ -58,3 +58,10 @@ def compare_voices(audio1: np.ndarray, audio2: np.ndarray) -> Tuple[float, float
     behav_score = compute_behavioural_score(audio2) # Target audio behavioural score
     
     return sim_score, behav_score
+
+def compare_challenge_clip(initial_audio: np.ndarray, challenge_audio: np.ndarray, use_fallback: bool = False) -> float:
+    """
+    Compare a second challenge clip to the initial clip to ensure speaker consistency.
+    """
+    from .fallback import get_similarity_with_fallback
+    return get_similarity_with_fallback(initial_audio, challenge_audio, use_fallback)

@@ -7,6 +7,10 @@ def compute_fallback_similarity(audio1: np.ndarray, audio2: np.ndarray) -> float
     """
     if len(audio1) == 0 or len(audio2) == 0:
         return 0.0
+        
+    # Ensure minimum length for stable statistics
+    if len(audio1) < 160 or len(audio2) < 160: # 10ms at 16kHz
+        return 50.0 # Not enough data, return neutral score
     
     # Calculate basic statistics
     mean_abs_1 = np.mean(np.abs(audio1))
@@ -23,9 +27,10 @@ def compute_fallback_similarity(audio1: np.ndarray, audio2: np.ndarray) -> float
     heuristic_diff = (diff_mean + diff_std) / 2.0
     
     # Score goes down as difference goes up
-    score = max(0.0, 100.0 * (1.0 - heuristic_diff))
+    score = np.clip(100.0 * (1.0 - heuristic_diff), 0.0, 100.0)
     
-    return score
+    # Round to 2 decimal places to ensure determinism
+    return float(np.round(score, 2))
 
 def get_similarity_with_fallback(audio1: np.ndarray, audio2: np.ndarray, use_fallback: bool = False) -> float:
     """
