@@ -1,0 +1,194 @@
+commit c890098a20bde982f5964fc0a0d5a1bcb8120621
+Merge: 97bc9dc e24e312
+Author:     siddidsaini08-create <siddidsaini08@gmail.com>
+AuthorDate: 2026-09-11 11:02:39 +0530
+Commit:     siddidsaini08-create <siddidsaini08@gmail.com>
+CommitDate: 2026-09-11 11:02:39 +0530
+
+    Merge remote changes, resolve requirements.txt conflict
+
+commit 97bc9dcd20c7fc4df1c0859dcf03ed3a0fdff04c
+Author:     siddidsaini08-create <siddidsaini08@gmail.com>
+AuthorDate: 2026-09-11 11:01:17 +0530
+Commit:     siddidsaini08-create <siddidsaini08@gmail.com>
+CommitDate: 2026-09-11 11:01:17 +0530
+
+    Add SecureSense DB layer: schema, persistence functions, audit hash-chain, seed/reset scripts, QA tests
+
+commit e24e312390f11306b2881234b906b302df9845bc
+Merge: 3b4c8df f7d6e26
+Author:     Raghav Jindal <raghav3114.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-11 01:10:07 +0530
+Commit:     GitHub <noreply@github.com>
+CommitDate: 2026-09-11 01:10:07 +0530
+
+    Merge pull request #2 from Jashan1205/fix-api-connection
+    
+    Fix api connection
+
+commit f7d6e2606e73de9280248117033fbc9db79dc86b
+Author:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-11 01:07:35 +0530
+Commit:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+CommitDate: 2026-09-11 01:07:35 +0530
+
+    Fix frontend-backend connection and MOCK_MODE
+
+commit 4f5915e5f7c3a1292dd7f0b0376359f287728c7c
+Author:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-11 00:40:31 +0530
+Commit:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+CommitDate: 2026-09-11 00:40:31 +0530
+
+    Day 4: Added latency measurement to audio tests
+
+commit 3b4c8df97a33990f7073d6c8359518ce7a38fc4c
+Merge: 42ce86c 70bac29
+Author:     Raghav Jindal <raghav3114.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-11 00:27:18 +0530
+Commit:     GitHub <noreply@github.com>
+CommitDate: 2026-09-11 00:27:18 +0530
+
+    Merge pull request #1 from Jashan1205/raghav-day3-audio-updates
+    
+    Day 3: Raghav audio updates, fallback validation, and README improvem…
+
+commit 70bac29cc386a0eaaf7780b025641f91055abfff
+Author:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-11 00:25:06 +0530
+Commit:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+CommitDate: 2026-09-11 00:25:06 +0530
+
+    Day 3: Raghav audio updates, fallback validation, and README improvements
+
+commit 42ce86cf83a8091f6312891098ec4f30945b9e1a
+Merge: 044c55c 29e4fbb
+Author:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-10 23:48:47 +0530
+Commit:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+CommitDate: 2026-09-10 23:48:47 +0530
+
+    Merge branch 'main' of https://github.com/Jashan1205/SIH
+
+commit 044c55c6ef5c6224c43f66f326e80869e8e4331c
+Author:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-10 23:47:56 +0530
+Commit:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+CommitDate: 2026-09-10 23:47:56 +0530
+
+    custum voices
+
+commit 29e4fbbbef2dc09354e309d68d7f7301b5363f1d
+Author:     Mannat <mannat2901.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-10 17:36:29 +0530
+Commit:     Mannat <mannat2901.beai25@chitkara.edu.in>
+CommitDate: 2026-09-10 17:36:29 +0530
+
+    Day 3: Fix lastChallengeScore bug, add Audit Trail section
+
+commit f2d90ebbe09547877786fed23000df6e3c2d0114
+Author:     Mannat <mannat2901.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-10 12:22:47 +0530
+Commit:     Mannat <mannat2901.beai25@chitkara.edu.in>
+CommitDate: 2026-09-10 12:22:47 +0530
+
+    Day 3: Challenge and Guardian flows wired with styling
+
+commit 68263d9f33cdf0316438376afba10839b3c2432b
+Merge: cf6c6c5 ff363dc
+Author:     Mannat <mannat2901.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-10 11:48:44 +0530
+Commit:     Mannat <mannat2901.beai25@chitkara.edu.in>
+CommitDate: 2026-09-10 11:48:44 +0530
+
+    Merge remote backend changes
+
+commit cf6c6c53b91a61284bdf43f2ab70d96cb7535def
+Author:     Mannat <mannat2901.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-10 00:45:16 +0530
+Commit:     Mannat <mannat2901.beai25@chitkara.edu.in>
+CommitDate: 2026-09-10 00:45:16 +0530
+
+    Frontend fully wired to /analyze contract, MOCK_MODE toggle for backend availability
+
+commit ff363dc0a371597061c2cd94c6f9b5c7e78d7132
+Merge: 779bcc1 edc548e
+Author:     Jashanpreet Singh <jashanpreetsingh1205@gmail.com>
+AuthorDate: 2026-09-09 21:54:32 +0530
+Commit:     Jashanpreet Singh <jashanpreetsingh1205@gmail.com>
+CommitDate: 2026-09-09 21:54:32 +0530
+
+    Merge branch 'main' of https://github.com/Jashan1205/SIH
+
+commit 779bcc13c46e1c63c986f8170bfc8a86d44ae3ff
+Author:     Jashanpreet Singh <jashanpreetsingh1205@gmail.com>
+AuthorDate: 2026-09-09 21:53:03 +0530
+Commit:     Jashanpreet Singh <jashanpreetsingh1205@gmail.com>
+CommitDate: 2026-09-09 21:53:47 +0530
+
+    feat: Integrate Day 2 backend ML logic into /analyze endpoint
+
+commit edc548eeda0b675e767f570c37a0576f187dbc57
+Author:     Jashanpreet Singh <jashanpreetsingh1205@gmail.com>
+AuthorDate: 2026-09-09 21:53:03 +0530
+Commit:     Jashanpreet Singh <jashanpreetsingh1205@gmail.com>
+CommitDate: 2026-09-09 21:53:03 +0530
+
+    feat: Integrate Day 2 backend ML logic into /analyze endpoint
+
+commit 6fdd11180ba917aafe477b6702b265d4f8225a6f
+Author:     Aditya Sharma <iadityasharma315@gmail.com>
+AuthorDate: 2026-09-09 12:43:27 +0530
+Commit:     Aditya Sharma <iadityasharma315@gmail.com>
+CommitDate: 2026-09-09 12:43:27 +0530
+
+    Add rule-based scam-intent scorer with 6 test fixtures covering all 5 risk categories
+
+commit cc1dba0ad56a9b900108dfe7becff178045cc512
+Merge: 6fcb397 ecb7b1b
+Author:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-09 11:57:58 +0530
+Commit:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+CommitDate: 2026-09-09 11:57:58 +0530
+
+    Merge branch 'main' of https://github.com/Jashan1205/SIH
+
+commit 6fcb3974b4f1a4f89bed10e46f9bd358643c69d0
+Author:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-09 11:57:35 +0530
+Commit:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+CommitDate: 2026-09-09 11:57:35 +0530
+
+    day2-task
+
+commit ecb7b1bc563dd64b4c275f9442c2bfafd479bd3b
+Author:     Mannat <mannat2901.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-09 11:40:10 +0530
+Commit:     Mannat <mannat2901.beai25@chitkara.edu.in>
+CommitDate: 2026-09-09 11:49:49 +0530
+
+    Add frontend: login, dashboard, call-check UI
+
+commit 63ac59310c2ed907cdfd4a816df3947006e2a74c
+Author:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+AuthorDate: 2026-09-09 10:59:52 +0530
+Commit:     raghav-3114 <raghav3114.beai25@chitkara.edu.in>
+CommitDate: 2026-09-09 10:59:52 +0530
+
+    day 1-Raghav
+
+commit a7c5bcd7154924e84169ef9676d4e95a03645aa9
+Author:     Jashanpreet Singh <jashanpreetsingh1205@gmail.com>
+AuthorDate: 2026-09-09 01:15:22 +0530
+Commit:     Jashanpreet Singh <jashanpreetsingh1205@gmail.com>
+CommitDate: 2026-09-09 01:17:00 +0530
+
+    chore: Day 1 initial backend setup
+
+commit 89e75d3e0ad9a6644969fc48cd1263a7dd3e149b
+Author:     Jashanpreet Singh <134047195+Jashan1205@users.noreply.github.com>
+AuthorDate: 2026-09-08 21:06:47 +0530
+Commit:     GitHub <noreply@github.com>
+CommitDate: 2026-09-08 21:06:47 +0530
+
+    Initial commit
