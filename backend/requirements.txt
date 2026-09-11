@@ -5,3 +5,4 @@ psycopg2-binary>=2.9.9
 librosa>=1.0.0
 scipy>=1.15.0
 python-multipart>=0.0.9
+faster-whisper>=1.0.0

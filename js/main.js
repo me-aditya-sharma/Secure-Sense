@@ -128,16 +128,16 @@
 
   function updateAnalyzeButtonState() {
     var analyzeBtn = document.querySelector('[data-analyze-btn]');
-    var transcriptInput = document.querySelector('[data-transcript-input]');
     if (!analyzeBtn) return;
 
+    // Transcript is no longer required from the user - the backend
+    // auto-transcribes the call audio. Only the audio file is required.
     var hasFile = !!selectedFile;
-    var hasTranscript = transcriptInput && transcriptInput.value.trim().length > 0;
 
     if (isAnalyzing) {
       analyzeBtn.disabled = true;
     } else {
-      analyzeBtn.disabled = !(hasFile && hasTranscript);
+      analyzeBtn.disabled = !hasFile;
     }
   }
 
@@ -1003,8 +1003,10 @@
     var transcriptInput = document.querySelector('[data-transcript-input]');
     var transcriptText = transcriptInput ? transcriptInput.value.trim() : '';
 
-    if (!selectedFile || !transcriptText) {
-      showError('Please provide both an audio recording and the call transcript before analyzing.');
+    // Transcript is optional now - if the presenter didn't type one, the
+    // backend auto-transcribes the uploaded call audio instead.
+    if (!selectedFile) {
+      showError('Please provide an audio recording before analyzing.');
       return;
     }
 

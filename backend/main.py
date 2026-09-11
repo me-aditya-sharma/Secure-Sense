@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, File, UploadFile, Form
+from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 import base64
 import os
@@ -13,11 +14,20 @@ from backend.audio.preprocessing import preprocess_pipeline
 from backend.audio.similarity import compare_voices
 from backend.NLP.scorer import score_transcript
 from backend.NLP.fixtures import TEST_TRANSCRIPTS
+from backend.audio.transcription import transcribe_audio
 
 app = FastAPI(
     title="SecureSense API",
     description="Backend API for SecureSense Prototype",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # local dev/demo only - tighten before any real deployment
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/health", response_model=HealthResponse)
@@ -36,7 +46,7 @@ async def enroll(request: EnrollRequest, db=Depends(get_db)):
 @app.post("/analyze", response_model=AnalyzeResponse)
 async def analyze(
     audio: UploadFile = File(...),
-    transcript: str = Form(...),
+    transcript: str = Form(default=""),
     metadata: str = Form(...),
     db=Depends(get_db)
 ):
@@ -50,6 +60,11 @@ async def analyze(
         temp_file = "backend/audio/data/user2_imposter_1.wav"
 
     enrolled_file = "backend/audio/data/user1_genuine_1.wav"
+
+    # Auto-transcribe from the call audio when no transcript was supplied,
+    # so the presenter no longer has to type out what was said.
+    if not transcript or not transcript.strip():
+        transcript = transcribe_audio(temp_file)
 
     try:
         audio1 = preprocess_pipeline(enrolled_file)
