@@ -813,6 +813,7 @@ main {
 .signal-card__confidence {
   font-size: 12px;
   color: var(--color-text-muted);
+  display: none; /* confidence % hidden per team request - score + risk badge shown instead */
 }
 
 .signal-card__bar-track {
