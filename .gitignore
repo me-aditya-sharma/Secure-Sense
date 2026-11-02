@@ -6,3 +6,12 @@ __pycache__/
 venv/
 env/
 .venv/
+.venv-consumer/
+.local/
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+frontend/*.tsbuildinfo
+consumer_api/__pycache__/
+artifacts/

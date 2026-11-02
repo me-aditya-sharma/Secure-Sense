@@ -1,0 +1,20 @@
+name: securesense-consumer
+services:
+  database:
+    image: postgres:17-alpine
+    container_name: securesense-consumer-db
+    environment:
+      POSTGRES_DB: securesense_consumer
+      POSTGRES_USER: ss_consumer
+      POSTGRES_PASSWORD: ${SS_DB_PASSWORD:?Run scripts/setup_local.py first}
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - consumer_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ss_consumer -d securesense_consumer"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  consumer_data:

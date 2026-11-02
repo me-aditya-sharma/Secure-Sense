@@ -1,0 +1,2 @@
+# Optional local ASR. Core analysis works without it.
+faster-whisper>=1.2.1,<2
